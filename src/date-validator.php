@@ -186,19 +186,13 @@ class DateValidator {
         
         $tests = array_merge_recursive($defaultTests, $tests);
         
-        foreach ($tests as $testKey => $test) {
+        foreach ($tests as $test) {
             
             $result = static::validateHistoricalDate( $test['date'], $test['detailed'] );
             
             $testResult = $result->isValid() === $test['valid'] && $result->getMessage() === static::getMessage($test['message']);
 
-            if ( !$testResult ) {
-
-                print "<p>$testKey:" . $test['date'] . "</p>";
-
-                return false;
-
-            }
+            if ( !$testResult ) return false;
             
         }
         
