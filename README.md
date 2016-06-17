@@ -12,11 +12,12 @@ require_once 'path/to/date-validator.php';
 
 To check a date e.g. `29/02/2016` run:
 ```
-$result = DateValidator::validateHistoricalDate($dateString);
+$result = DateValidator::validateHistoricalDate('29/02/2016');
 
 if ($result->isValid()) {
 
     // Valid date and format
+    // This is what would actually run base on the example date
 
 } else {
     
