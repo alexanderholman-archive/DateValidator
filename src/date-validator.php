@@ -9,6 +9,8 @@ class DateValidator {
     const FORMAT    = 1;
     const INVALID   = 2;
     const VALID     = 3;
+    const NOTSTRING = 4;
+    const NOTPAST   = 5;
 
     /**
      * @var array
@@ -17,7 +19,9 @@ class DateValidator {
         self::NULLEMPTY => 'Date is empty',
         self::FORMAT    => 'Date string entered did not match the pattern DD/MM/YYYY',
         self::INVALID   => 'Date is not valid',
-        self::VALID     => 'Date is valid'
+        self::VALID     => 'Date is valid',
+        self::NOTSTRING => 'Data transmitted was not a string',
+        self::NOTPAST   => 'Date sent was not a historic date'
     ];
 
     /**
@@ -36,15 +40,19 @@ class DateValidator {
 
     /**
      * @param null|string $dateString
-     * @param bool $detailed If you want the messages to be a little more detailed
-     * set to true || If you just want to know if a string is a valid date, set to false
+     * @param bool $detailed
      * @return Result
      */
-    static public function validateHistoricalDate( $dateString = null, $detailed = false ) {
-        if ( is_null( self::$result ) ) self::$result = new Result();
+    static public function validateDate( $dateString = null, $detailed = false ) {
+        self::initResult();
         if ( $detailed ) {
             if ( is_null( $dateString ) || empty( $dateString ) ) {
                 self::$result->setMessage( self::getMessage( self::NULLEMPTY ) );
+                self::$result->setValidity( false );
+                return self::$result;
+            }
+            if ( !is_string( $dateString ) ) {
+                self::$result->setMessage( self::getMessage( self::NOTSTRING ) );
                 self::$result->setValidity( false );
                 return self::$result;
             }
@@ -68,6 +76,40 @@ class DateValidator {
     }
 
     /**
+     * @param string $dateString
+     * @return Result
+     */
+    static public function isHistoricalDate( $dateString ) {
+        self::initResult();
+        $dateString = str_replace( '/', '-', $dateString );
+        $inputDate = new DateTime( $dateString );
+        $yesterdayDate = new DateTime();
+        $yesterdayDate->sub( new DateInterval( 'P1D' ) );
+        if ( $inputDate > $yesterdayDate ) {
+            self::$result->setValidity( false );
+            self::$result->setMessage( self::getMessage( self::NOTPAST ) );
+            return self::$result;
+        }
+        self::$result->setValidity( true );
+        self::$result->setMessage( self::getMessage( self::VALID ) );
+        return self::$result;
+    }
+
+    /**
+     * @param null|string $dateString
+     * @param bool $detailed If you want the messages to be a little more detailed
+     * set to true || If you just want to know if a string is a valid date, set to false
+     * @return Result
+     */
+    static public function validateHistoricalDate( $dateString = null, $detailed = false ) {
+        self::$result = self::validateDate( $dateString, $detailed );
+        if ( !self::$result->isValid() ) return self::$result;
+        self::$result = self::isHistoricalDate( $dateString );
+        if ( !self::$result->isValid() ) return self::$result;
+        return self::$result;
+    }
+
+    /**
      * @param array $tests
      * @return bool
      */
@@ -82,8 +124,8 @@ class DateValidator {
             ],
             1 => [
                 'date' => '03/12/2999',
-                'valid' => true,
-                'message' => self::VALID,
+                'valid' => false,
+                'message' => self::NOTPAST,
                 'detailed' => true
             ],
             2 => [
@@ -136,8 +178,8 @@ class DateValidator {
             ],
             10 => [
                 'date' => '03/12/2999',
-                'valid' => true,
-                'message' => self::VALID,
+                'valid' => false,
+                'message' => self::NOTPAST,
                 'detailed' => false
             ],
             11 => [
@@ -181,6 +223,12 @@ class DateValidator {
                 'valid' => false,
                 'message' => self::INVALID,
                 'detailed' => false
+            ],
+            18 => [
+                'date' => new DateTime( '03/12/1999' ),
+                'valid' => false,
+                'message' => self::NOTSTRING,
+                'detailed' => true
             ]
         ];
         
@@ -192,12 +240,21 @@ class DateValidator {
             
             $testResult = $result->isValid() === $test['valid'] && $result->getMessage() === static::getMessage($test['message']);
 
-            if ( !$testResult ) return false;
+            if ( !$testResult ) {
+                return false;
+            }
             
         }
         
         return true;
 
+    }
+
+    /**
+     * set self::$result = new Result if null
+     */
+    static private function initResult() {
+        if ( is_null( self::$result ) ) self::$result = new Result();
     }
 
 }
