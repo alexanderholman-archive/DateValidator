@@ -34,4 +34,7 @@ DateValidator::validateHistoricalDate($dateString, true);
 You will then be have a more specific error message when calling `$result->getMessage()`
 
 ## Example
-View the file `example/getting-started.php`
+View the file `example/getting-started.php` or `example/form.php`
+
+## Try It
+Enter a date in the form provided [here](http://holman.org.uk/date-validator/example/form.php) and see if it is valid.
