@@ -33,9 +33,9 @@ class DateValidator {
      * @param mixed $key
      * @return string
      */
-    static public function getMessage( $key ) {
-        if ( !key_exists($key, self::$messages) ) return '';
-        return self::$messages[$key];
+    static public function getMessage($key) {
+        if (!key_exists($key, self::$messages)) return '';
+        return self::$messages[ $key ];
     }
 
     /**
@@ -43,35 +43,35 @@ class DateValidator {
      * @param bool $detailed
      * @return Result
      */
-    static public function validateDate( $dateString = null, $detailed = false ) {
+    static public function validateDate($dateString = null, $detailed = false) {
         self::initResult();
-        if ( $detailed ) {
-            if ( is_null( $dateString ) || empty( $dateString ) ) {
-                self::$result->setMessage( self::getMessage( self::NULLEMPTY ) );
-                self::$result->setValidity( false );
+        if ($detailed) {
+            if (is_null($dateString) || empty($dateString)) {
+                self::$result->setMessage(self::getMessage(self::NULLEMPTY));
+                self::$result->setValidity(false);
                 return self::$result;
             }
-            if ( !is_string( $dateString ) ) {
-                self::$result->setMessage( self::getMessage( self::NOTSTRING ) );
-                self::$result->setValidity( false );
+            if (!is_string($dateString)) {
+                self::$result->setMessage(self::getMessage(self::NOTSTRING));
+                self::$result->setValidity(false);
                 return self::$result;
             }
             $regex = '/\d{2}\/\d{2}\/\d{4}/';
-            $found = [];
-            preg_match_all( $regex, $dateString, $found );
-            if ( count( $found[0] ) <> 1 ) {
-                self::$result->setMessage( self::getMessage( self::FORMAT ) );
-                self::$result->setValidity( false );
+            $found = [ ];
+            preg_match_all($regex, $dateString, $found);
+            if (count($found[ 0 ]) <> 1) {
+                self::$result->setMessage(self::getMessage(self::FORMAT));
+                self::$result->setValidity(false);
                 return self::$result;
             }
-            $dateParts = explode( '/', $dateString );
-            self::$result->setValidity( checkdate( (int) $dateParts[1], (int) $dateParts[0], (int) $dateParts[2] ) );
+            $dateParts = explode('/', $dateString);
+            self::$result->setValidity(checkdate((int) $dateParts[ 1 ], (int) $dateParts[ 0 ], (int) $dateParts[ 2 ]));
         } else {
             $format = 'd/m/Y';
             $createdDate = DateTime::createFromFormat($format, $dateString);
-            self::$result->setValidity( $createdDate && $createdDate->format($format) === $dateString );
+            self::$result->setValidity($createdDate && $createdDate->format($format) === $dateString);
         }
-        self::$result->setMessage( self::getMessage( self::$result->isValid() ? self::VALID : self::INVALID ) );
+        self::$result->setMessage(self::getMessage(self::$result->isValid() ? self::VALID : self::INVALID));
         return self::$result;
     }
 
@@ -79,19 +79,19 @@ class DateValidator {
      * @param string $dateString
      * @return Result
      */
-    static public function isHistoricalDate( $dateString ) {
+    static public function isHistoricalDate($dateString) {
         self::initResult();
-        $dateString = str_replace( '/', '-', $dateString );
-        $inputDate = new DateTime( $dateString );
+        $dateString = str_replace('/', '-', $dateString);
+        $inputDate = new DateTime($dateString);
         $yesterdayDate = new DateTime();
-        $yesterdayDate->sub( new DateInterval( 'P1D' ) );
-        if ( $inputDate > $yesterdayDate ) {
-            self::$result->setValidity( false );
-            self::$result->setMessage( self::getMessage( self::NOTPAST ) );
+        $yesterdayDate->sub(new DateInterval('P1D'));
+        if ($inputDate > $yesterdayDate) {
+            self::$result->setValidity(false);
+            self::$result->setMessage(self::getMessage(self::NOTPAST));
             return self::$result;
         }
-        self::$result->setValidity( true );
-        self::$result->setMessage( self::getMessage( self::VALID ) );
+        self::$result->setValidity(true);
+        self::$result->setMessage(self::getMessage(self::VALID));
         return self::$result;
     }
 
@@ -103,9 +103,13 @@ class DateValidator {
      */
     static public function validateHistoricalDate( $dateString = null, $detailed = false ) {
         self::$result = self::validateDate( $dateString, $detailed );
-        if ( !self::$result->isValid() ) return self::$result;
+        if ( !self::$result->isValid() ) {
+            return self::$result;
+        }
         self::$result = self::isHistoricalDate( $dateString );
-        if ( !self::$result->isValid() ) return self::$result;
+        if ( !self::$result->isValid() ) {
+            return self::$result;
+        }
         return self::$result;
     }
 
@@ -113,7 +117,7 @@ class DateValidator {
      * @param array $tests
      * @return bool
      */
-    static public function testValidateHistoricalDate( $tests = [] )
+    static public function testValidateHistoricalDate($tests = [ ])
     {
         $defaultTests = [
             0 => [
@@ -225,7 +229,7 @@ class DateValidator {
                 'detailed' => false
             ],
             18 => [
-                'date' => new DateTime( '03/12/1999' ),
+                'date' => new DateTime('03/12/1999'),
                 'valid' => false,
                 'message' => self::NOTSTRING,
                 'detailed' => true
@@ -236,11 +240,11 @@ class DateValidator {
         
         foreach ($tests as $test) {
             
-            $result = static::validateHistoricalDate( $test['date'], $test['detailed'] );
+            $result = static::validateHistoricalDate($test[ 'date' ], $test[ 'detailed' ]);
             
-            $testResult = $result->isValid() === $test['valid'] && $result->getMessage() === static::getMessage($test['message']);
+            $testResult = $result->isValid() === $test[ 'valid' ] && $result->getMessage() === static::getMessage($test[ 'message' ]);
 
-            if ( !$testResult ) {
+            if (!$testResult) {
                 return false;
             }
             
@@ -254,7 +258,9 @@ class DateValidator {
      * set self::$result = new Result if null
      */
     static private function initResult() {
-        if ( is_null( self::$result ) ) self::$result = new Result();
+        if ( is_null( self::$result ) ) {
+            self::$result = new Result();
+        }
     }
 
 }

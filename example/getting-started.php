@@ -25,4 +25,4 @@ if (!$result->isValid()) {
 
 }
 
-echo $automate ? 'Function automated test result: ' . ( DateValidator::testValidateHistoricalDate() ? 'working' : 'error' ) : $message;
+echo $automate ? 'Function automated test result: ' . (DateValidator::testValidateHistoricalDate() ? 'working' : 'error') : $message;
