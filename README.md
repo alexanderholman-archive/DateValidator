@@ -1,4 +1,4 @@
-# Date Validator
+# Date Validator [![Build Status](https://scrutinizer-ci.com/g/alexanderholman/date-validator/badges/build.png?b=master)](https://scrutinizer-ci.com/g/alexanderholman/date-validator/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alexanderholman/date-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alexanderholman/date-validator/?branch=master)
 The purpose of this class is to validate a date against a defined format of `DD/MM/YYY`
 
 ## Usage
