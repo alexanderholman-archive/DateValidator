@@ -34,7 +34,7 @@ class DateValidator {
      * @return string
      */
     static public function getMessage( $key ) {
-        if ( !key_exists($key,static::$messages) ) return '';
+        if ( !key_exists($key, self::$messages) ) return '';
         return static::$messages[$key];
     }
 
