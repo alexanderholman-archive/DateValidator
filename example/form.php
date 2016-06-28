@@ -1,16 +1,16 @@
 <?php
 $inputDate = '';
 $message = false;
-if ( isset( $_POST['date'] ) ) {
+if (isset($_POST[ 'date' ])) {
     require_once '../src/result.php';
     require_once '../src/date-validator.php';
-    $inputDate = $_POST['date'];
-    $result = DateValidator::validateHistoricalDate( $inputDate, true );
-    if ( $result->isValid() ) {
+    $inputDate = $_POST[ 'date' ];
+    $result = DateValidator::validateHistoricalDate($inputDate, true);
+    if ($result->isValid()) {
         $message = "Date ($inputDate) is valid";
         $inputDate = '';
     } else {
-        if ( $inputDate == 'null' ) $inputDate = '';
+        if ($inputDate == 'null') $inputDate = '';
         $message = $result->getMessage();
     }
 }
