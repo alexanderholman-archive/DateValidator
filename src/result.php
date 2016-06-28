@@ -16,7 +16,9 @@ class Result {
      * @param $message
      */
     public function setMessage($message) {
-        if (!is_string($message)) return false;
+        if (!is_string($message)) {
+            return false;
+        }
         $this->message = $message;
         return true;
     }
@@ -29,7 +31,9 @@ class Result {
     }
 
     public function setValidity($validity) {
-        if (!is_bool($validity)) return false;
+        if (!is_bool($validity)) {
+            return false;
+        }
         $this->valid = $validity;
         return true;
     }

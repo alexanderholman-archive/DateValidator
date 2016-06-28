@@ -34,7 +34,9 @@ class DateValidator {
      * @return string
      */
     static public function getMessage($key) {
-        if (!key_exists($key, self::$messages)) return '';
+        if (!key_exists($key, self::$messages)) {
+            return '';
+        }
         return self::$messages[ $key ];
     }
 
@@ -101,13 +103,13 @@ class DateValidator {
      * set to true || If you just want to know if a string is a valid date, set to false
      * @return Result
      */
-    static public function validateHistoricalDate( $dateString = null, $detailed = false ) {
-        self::$result = self::validateDate( $dateString, $detailed );
-        if ( !self::$result->isValid() ) {
+    static public function validateHistoricalDate($dateString = null, $detailed = false) {
+        self::$result = self::validateDate($dateString, $detailed);
+        if (!self::$result->isValid()) {
             return self::$result;
         }
-        self::$result = self::isHistoricalDate( $dateString );
-        if ( !self::$result->isValid() ) {
+        self::$result = self::isHistoricalDate($dateString);
+        if (!self::$result->isValid()) {
             return self::$result;
         }
         return self::$result;
@@ -258,7 +260,7 @@ class DateValidator {
      * set self::$result = new Result if null
      */
     static private function initResult() {
-        if ( is_null( self::$result ) ) {
+        if (is_null(self::$result)) {
             self::$result = new Result();
         }
     }
