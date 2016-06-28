@@ -7,7 +7,7 @@ $automate = false;
 
 $message = 'Hi! if you\'re reading this the date is valid and matches the pattern DD/MM/YYYY';
 
-$dateString = '03/12/1999';            // Valid
+$dateString = '03/12/1999'; // Valid
 //$dateString = '03/12/2999';            // Valid
 //$dateString = '3/12/1999';             // Error
 //$dateString = '12/31/1999';            // Error

@@ -10,7 +10,9 @@ if (isset($_POST[ 'date' ])) {
         $message = "Date ($inputDate) is valid";
         $inputDate = '';
     } else {
-        if ($inputDate == 'null') $inputDate = '';
+        if ($inputDate == 'null') {
+            $inputDate = '';
+        }
         $message = $result->getMessage();
     }
 }
